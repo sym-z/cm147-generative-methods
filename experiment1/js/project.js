@@ -11,8 +11,6 @@ const fillers = {
 };
 
 const template = `$intro $preamble $starter $middle $connector $descriptor $ending $postfix $outro`;
-
-
 // STUDENTS: You don't need to edit code below this line.
 
 const slotPattern = /\$(\w+)/;
