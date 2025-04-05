@@ -10,7 +10,7 @@ const fillers = {
   outro: ["! The final boss is crazy", "! It is free to play with a coupon.", "! The battle pass in it kind of doesn't make sense."]
 };
 
-const template = `$intro $preamble $starter $middle $connector $descriptor $ending $postfix $outro`;
+const template = `$intro $preamble $starter $middle $connector $descriptor $ending $postfix$outro`;
 // STUDENTS: You don't need to edit code below this line.
 
 const slotPattern = /\$(\w+)/;
