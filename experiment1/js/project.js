@@ -1,14 +1,16 @@
 const fillers = {
+  intro: ["Come check out this new game! It's called", "Ugh I am so tired, I was up all night playing", "I have been thinking of picking up this game once it goes on sale, it's called", "Yo they just announced they're making"],
   preamble: ["The", "Legend of", "Adventures of", "Super"],
   starter: ["Bucket", "Frog", "Grumbo", "Cat-Man", "Block Bot", "Turtle", "Beetle"],
   middle: ["Forest", "City", "Fantasy", "Treasure", "Story"],
   connector: [":", "and the", "&"],
   descriptor: ["Curse of the", "Spirits of the", "Adventures in", "Revenge of the", "Tournament of", "Search for"],
   ending:["Souls", "Tennis", "Racing", "Party"],
-  postfix:["64", "Ultra", "Reloaded", "Remix", "Deluxe", "2", "3", "World Tour"],
+  postfix: ["64", "Ultra", "Reloaded", "Remix", "Deluxe", "2", "3", "World Tour"],
+  outro: ["! The final boss is crazy", "! It is free to play with a coupon.", "! The battle pass in it kind of doesn't make sense."]
 };
 
-const template = `Come check out this new game! It's called $preamble $starter $middle $connector $descriptor $ending $postfix!`;
+const template = `$intro $preamble $starter $middle $connector $descriptor $ending $postfix $outro`;
 
 
 // STUDENTS: You don't need to edit code below this line.
