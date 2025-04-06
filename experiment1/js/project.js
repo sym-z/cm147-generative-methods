@@ -6,7 +6,7 @@ const fillers = {
   connector: [":", "and the", "&"],
   descriptor: ["Curse of the", "Spirits of the", "Adventures in", "Revenge of the", "Tournament of", "Search for"],
   ending:["Souls", "Tennis", "Racing", "Party"],
-  postfix: ["64", "Ultra", "Reloaded", "Remix", "Deluxe", "2", "3", "World Tour", "3D", "Edition", ""],
+  postfix: ["64", "Ultra", "Reloaded", "Remix", "Deluxe", "2", "3", "World Tour", "3D", "Edition"],
   outro: ["! The final boss is crazy.", "! It is free to play with a coupon.", "! The battle pass in it kind of doesn't make sense."]
 };
 
