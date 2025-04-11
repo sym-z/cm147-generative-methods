@@ -10,6 +10,10 @@
 const VALUE1 = 1;
 const VALUE2 = 2;
 
+const WATER = [0,0,255,255];
+const LAND = [0,255,0,255];
+const SKY = [255,0,0,255];
+
 // Globals
 let myInstance;
 let canvasContainer;
@@ -49,31 +53,39 @@ function setup() {
     resizeScreen();
   });
   resizeScreen();
+  drawWater();
 }
-
+function drawWater(){
+  noStroke();
+  noiseSeed(millis());
+  let noiseLevel = 255;
+  let noiseScale = 0.055;
+  let brightness = 165;
+  let tileW = 5;
+  let tileH = 5;
+  for(let x = 0; x < canvas.width; x+= tileW)
+  {
+    for(let y = 0; y < canvas.height; y += tileH)
+    {
+      let nx = noiseScale * x;
+      let ny = noiseScale * y;
+      let c = 255 * noise(nx,ny) + brightness;
+      let color = [c/4,c/1.5,c,255]
+      fill(color);
+      rect(x,y,x+tileW,y+tileH)
+      //point(x,y);
+    }
+  }
+}
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
-  background(220);    
-  // call a method on the instance
-  myInstance.myMethod();
-
-  // Set up rotation for the rectangle
-  push(); // Save the current drawing context
-  translate(centerHorz, centerVert); // Move the origin to the rectangle's center
-  rotate(frameCount / 100.0); // Rotate by frameCount to animate the rotation
-  fill(234, 31, 81);
-  noStroke();
-  rect(-125, -125, 250, 250); // Draw the rectangle centered on the new origin
-  pop(); // Restore the original drawing context
-
-  // The text is not affected by the translate and rotate
-  fill(255);
-  textStyle(BOLD);
-  textSize(140);
-  text("p5*", centerHorz - 105, centerVert + 40);
+  //drawWater();
 }
 
 // mousePressed() function is called once after every time a mouse button is pressed
 function mousePressed() {
     // code to run when mouse is pressed
+    noiseSeed(millis());
+    clear();
+    drawWater();
 }
