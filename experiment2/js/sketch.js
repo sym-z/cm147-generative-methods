@@ -10,52 +10,50 @@
 const VALUE1 = 1;
 const VALUE2 = 2;
 
-const WATER = [0,0,255,255];
-const LAND = [0,255,0,255];
-const SKY = [255,0,0,255];
+const WATER = [0, 0, 255, 255];
+const LAND = [0, 255, 0, 255];
+const SKY = [255, 0, 0, 255];
 
 // Globals
-let myInstance;
 let canvasContainer;
+let canvas;
 var centerHorz, centerVert;
-
-class MyClass {
-    constructor(param1, param2) {
-        this.property1 = param1;
-        this.property2 = param2;
-    }
-
-    myMethod() {
-        // code to run when method is called
-    }
-}
-
-function resizeScreen() {
-  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
-  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
-  console.log("Resizing...");
-  resizeCanvas(canvasContainer.width(), canvasContainer.height());
-  // redrawCanvas(); // Redraw everything based on new size
-}
 
 // setup() function is called once when the program starts
 function setup() {
   // place our canvas, making it fit our container
   canvasContainer = $("#canvas-container");
-  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
+  canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
   canvas.parent("canvas-container");
-  // resize canvas is the page is resized
+  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
+  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
 
-  // create an instance of the class
-  myInstance = new MyClass("VALUE1", "VALUE2");
-
-  $(window).resize(function() {
-    resizeScreen();
-  });
-  resizeScreen();
-  drawWater();
+  paint();
 }
-function drawWater(){
+function paint(){
+  drawWater();
+  drawRocks();
+}
+const ROCK_COUNT_MIN = 5;
+const ROCK_COUNT_MAX = 20;
+const ROCK_COLOR = [133, 75, 48, 180];
+const ROCK_THICK_MIN = 20;
+const ROCK_THICK_MAX = 45;
+function drawRocks() {
+  noStroke();
+  randomSeed(millis());
+  let numRocks = random(ROCK_COUNT_MIN,ROCK_COUNT_MAX)
+  for (let i = 0; i < numRocks; i++) {
+    let randomX = random(canvas.width);
+    let randomY = random(canvas.height);
+    let randomW = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
+    let randomH = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
+    fill(ROCK_COLOR);
+    arc(randomX, randomY, randomW, randomH,PI, 0);
+    console.log(`drawing rock at ${randomX},${randomY}`)
+  }
+}
+function drawWater() {
   noStroke();
   noiseSeed(millis());
   let noiseLevel = 255;
@@ -63,17 +61,14 @@ function drawWater(){
   let brightness = 165;
   let tileW = 5;
   let tileH = 5;
-  for(let x = 0; x < canvas.width; x+= tileW)
-  {
-    for(let y = 0; y < canvas.height; y += tileH)
-    {
+  for (let x = 0; x < canvas.width; x += tileW) {
+    for (let y = 0; y < canvas.height; y += tileH) {
       let nx = noiseScale * x;
       let ny = noiseScale * y;
-      let c = 255 * noise(nx,ny) + brightness;
-      let color = [c/4,c/1.5,c,255]
+      let c = 255 * noise(nx, ny) + brightness;
+      let color = [c / 4, c / 1.5, c, 255];
       fill(color);
-      rect(x,y,x+tileW,y+tileH)
-      //point(x,y);
+      rect(x, y, x + tileW, y + tileH);
     }
   }
 }
@@ -82,10 +77,6 @@ function draw() {
   //drawWater();
 }
 
-// mousePressed() function is called once after every time a mouse button is pressed
 function mousePressed() {
-    // code to run when mouse is pressed
-    noiseSeed(millis());
-    clear();
-    drawWater();
+  paint();
 }
