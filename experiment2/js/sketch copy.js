@@ -2,23 +2,22 @@
 // Author: Your Name
 // Date:
 
-// LAND LEVELS
-const SEA_LEVEL = 128;
-const SEA_MIN_THICK = 256;
-const SKY_MIN_THICK = 64;
-let bgHeight;
-const BG_MIN_THICK = 64;
-let mgHeight;
-const MG_MIN_THICK = 64;
-let fgHeight;
-const FG_MIN_THICK = 64;
+// Here is how you might set up an OOP p5.js project
+// Note that p5.js looks for a file called sketch.js
 
-// COLORS
+// Constants - User-servicable parts
+// In a longer project I like to put these in a separate file
+const VALUE1 = 1;
+const VALUE2 = 2;
+
+const SEA_LEVEL = 128;
+const BG_HEIGHT = random(0,SEA_LEVEL);
+const BG_MIN_THICK = 64;
+const MG_HEIGHT = 0;
+const FG_HEIGHT = 0;
 const WATER = [0.25, 0.66, 1, 1];
 const SKY = [0.4, 0.48, 0.6, 1];
 const LAND = [0, 255, 0, 255];
-const LAND2 = [255, 255, 0, 255];
-const LAND3 = [255, 0, 0, 255];
 
 // Globals
 let canvasContainer;
@@ -40,43 +39,24 @@ function paint() {
   drawSky();
   drawWater();
   drawRocks();
-  drawBackground();
-  drawMidground();
-  drawForeground();
 }
 // Trees
 function drawBackground(){
-  bgHeight = random(SKY_MIN_THICK,SEA_LEVEL)
   fill(LAND);
   beginShape();
-  vertex(0,bgHeight);
-  vertex(canvas.width,bgHeight);
-  vertex(canvas.width,bgHeight+BG_MIN_THICK);
-  vertex(0,bgHeight+BG_MIN_THICK);
+  vertex(0,BG_HEIGHT);
+  vertex(canvas.width,BG_HEIGHT);
+  vertex(canvas.width,BG_HEIGHT+BG_MIN_THICK);
+  vertex(0,BG_HEIGHT+BG_MIN_THICK);
   endShape(CLOSE);
 }
 // Far Coast
 function drawMidground(){
-  mgHeight = random(bgHeight,bgHeight+BG_MIN_THICK)
-  fill(LAND2);
-  beginShape();
-  vertex(0,mgHeight);
-  vertex(canvas.width,mgHeight);
-  vertex(canvas.width,mgHeight+MG_MIN_THICK);
-  vertex(0,mgHeight+MG_MIN_THICK);
-  endShape(CLOSE);
 
 }
 // Close coast
 function drawForeground(){
-  fgHeight = random(mgHeight+MG_MIN_THICK+SEA_MIN_THICK,canvas.height-FG_MIN_THICK)
-  fill(LAND3);
-  beginShape();
-  vertex(0,fgHeight);
-  vertex(canvas.width,fgHeight);
-  vertex(canvas.width,canvas.height);
-  vertex(0,canvas.height);
-  endShape(CLOSE);
+
 }
 const ROCK_COUNT_MIN = 5;
 const ROCK_COUNT_MAX = 20;
