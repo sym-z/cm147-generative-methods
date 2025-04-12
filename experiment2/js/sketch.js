@@ -1,6 +1,6 @@
-// sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// sketch.js - Living Impressions: Sea Ranch, CA 
+// Author: Jack Sims
+// Date: 14 April 2025
 
 // LAND LEVELS
 const SEA_LEVEL = 128;
@@ -22,29 +22,26 @@ const SKY = [0.4, 0.48, 0.6, 1];
 const FG_COLOR = [156, 138, 117, 255];
 const MG_COLOR = [103, 102, 87, 255];
 const BG_COLOR = [70, 89, 56, 255];
-const GRASS_COLOR = [112, 147, 80, 255];
-const FLOWER_COLOR = [196, 90, 180, 255];
-const STONE_COLOR = [71, 71, 71, 75];
+const GRASS_COLOR = [112, 147, 80, 180];
+const FLOWER_COLOR = [196, 90, 180, 150];
+const STONE_COLOR = [71, 71, 71, 45];
 
 // Globals
 let canvasContainer;
 let canvas;
-var centerHorz, centerVert;
 
 // Randomization
 let seed = 265;
 let mgSeed = 264;
 let bgSeed = 512;
 let fgSeed = 420;
-// setup() function is called once when the program starts
+
 function setup() {
-  // place our canvas, making it fit our container
   canvasContainer = $("#canvas-container");
   canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
   canvas.parent("canvas-container");
-  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
-  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
 }
+
 function paint() {
   drawSky();
   drawWater();
@@ -56,8 +53,25 @@ function paint() {
   drawStrata();
   addSunlight();
 }
+
+function draw() {
+  clear();
+  paint();
+}
+
+function mousePressed() {
+  noiseSeed(millis());
+  bgSeed = millis();
+  mgSeed = millis() + frameCount;
+  fgSeed = millis() * random(0.2, 0.9);
+  seed = millis();
+  paint();
+}
+
 function addFoliage() {
-  fill(0);
+  let flowerCount = 0;
+  let maxFlowers = 20;
+  fill(GRASS_COLOR);
   let flowerBoundaryX = canvas.width / 2;
   let flowerBoundaryY = canvas.height - FG_THICK;
   let grassBoundaryX = 256;
@@ -79,7 +93,17 @@ function addFoliage() {
     canvas.width,
     flowerBoundaryY
   );
+  fill(FLOWER_COLOR)
+  while(flowerCount < maxFlowers)
+  {
+    let xPos = random(flowerBoundaryX, canvas.width)
+    let yPos = random(flowerBoundaryY, canvas.height)
+    rect(xPos,yPos,5,8)
+    flowerCount++
+
+  }
 }
+
 function drawStrata() {
   fill(STONE_COLOR);
   let stoneBorderDarkening = 0.95;
@@ -96,8 +120,6 @@ function drawStrata() {
   let slateSize = 4;
   let slateSlant = random(0,12);
   let stoneMinY = mgHeight + MG_THICK;
-  let stoneMaxY = stoneMinY + stoneThickness;
-  // rect(0,stoneMinY,canvas.width,stoneThickness)
   beginShape(QUAD_STRIP);
   vertex(0, stoneMinY);
   vertex(canvas.width, stoneMinY+slateSlant);
@@ -108,9 +130,10 @@ function drawStrata() {
   endShape();
   noStroke();
 }
+
 function addSunlight() {
   let sunLevel = random(70, 150);
-  let sunSlope = random(0.7, 1.5);
+  let sunSlope = random(0.2, 0.95);
   for (let x = 0; x < canvas.width; x += 10) {
     for (let y = 0; y < canvas.height; y += 10) {
       if (y > x / sunSlope) {
@@ -120,6 +143,7 @@ function addSunlight() {
     }
   }
 }
+
 // Trees
 function drawBackground() {
   randomSeed(seed);
@@ -142,21 +166,22 @@ function drawBackground() {
   }
   // BOTTOM SIDE
   for (let x = canvas.width + LAND_LOD; x >= 0 - LAND_LOD; x -= LAND_LOD) {
-    let y = bgHeight + BG_THICK / 2;
+    let y = bgHeight + BG_THICK ;
     let noiseScale = 0.01;
     let nx = x * noiseScale;
     let noiseVal = BG_THICK * noise(nx);
     let yPos = y + noiseVal + BG_THICK;
     vertex(x, yPos);
   }
-  endShape(TRIANGLE_FAN);
+  endShape();
 }
+
 // Far Coast
 // First draw a line that cuts through the center of the background, then draw the underside of the midground
 function drawMidground() {
   randomSeed(seed);
   noiseSeed(mgSeed);
-  mgHeight = bgHeight;
+  mgHeight = bgHeight+BG_THICK/2;
   fill(MG_COLOR);
   beginShape();
   // TOP SIDE
@@ -181,18 +206,14 @@ function drawMidground() {
     let yPos = y + noiseVal + MG_THICK;
     vertex(x, yPos);
   }
-  // vertex(0, mgHeight);
-  // vertex(canvas.width, mgHeight);
-  // vertex(canvas.width, mgHeight + MG_THICK);
-  // vertex(0, mgHeight + MG_THICK);
   endShape(CLOSE);
 }
+
 // Close coast
 const FG_SLOPE_FACTOR = 5;
 function drawForeground() {
   randomSeed(seed);
   noiseSeed(fgSeed);
-  // fgHeight = random(mgHeight + MG_THICK + SEA_THICK, canvas.height - FG_THICK);
   fgHeight = canvas.height - FG_THICK;
   fill(FG_COLOR);
   beginShape();
@@ -213,16 +234,9 @@ function drawForeground() {
   // BOTTOM SIDE
   vertex(canvas.width + LAND_LOD, canvas.height + LAND_LOD);
   vertex(-LAND_LOD, canvas.height + LAND_LOD);
-  // for (let x = canvas.width + LAND_LOD; x >= 0 - LAND_LOD; x -= LAND_LOD) {
-  //   let y = fgHeight + FG_THICK / 2;
-  //   let noiseScale = 0.01;
-  //   let nx = x * noiseScale;
-  //   let noiseVal = FG_THICK * noise(nx);
-  //   let yPos = y + noiseVal + FG_THICK;
-  //   vertex(x, yPos);
-  // }
   endShape(CLOSE);
 }
+
 const ROCK_COUNT_MIN = 5;
 const ROCK_COUNT_MAX = 20;
 const ROCK_COLOR = [70, 60, 52, 255];
@@ -244,9 +258,9 @@ function drawRocks() {
     let offset = sin(millis() / 800);
     offset = constrain(offset, -PI / 4, PI / 4);
     arc(randomX, randomY, randomW, randomH, PI - offset, 0 + offset, OPEN);
-    // console.log(`drawing rock at ${randomX},${randomY}`);
   }
 }
+
 const FOAM_LEVEL = 180;
 function drawWater() {
   noStroke();
@@ -263,7 +277,7 @@ function drawWater() {
       let color = [];
       if (c < FOAM_LEVEL) {
         c += brightness;
-        WATER.forEach((item, index) => {
+        WATER.forEach((item) => {
           color.push(c * item);
         });
       } else {
@@ -274,6 +288,7 @@ function drawWater() {
     }
   }
 }
+
 const CLOUD_BRIGHTNESS = 150;
 function drawSky() {
   noStroke();
@@ -290,7 +305,7 @@ function drawSky() {
       let color = [];
       if (c < CLOUD_BRIGHTNESS) {
         c += brightness;
-        SKY.forEach((item, index) => {
+        SKY.forEach((item) => {
           color.push(c * item);
         });
       } else {
@@ -300,18 +315,4 @@ function drawSky() {
       rect(x, y, x + tileW, y + tileH);
     }
   }
-}
-// draw() function is called repeatedly, it's the main animation loop
-function draw() {
-  clear();
-  paint();
-}
-
-function mousePressed() {
-  noiseSeed(millis());
-  bgSeed = millis();
-  mgSeed = millis() + frameCount;
-  fgSeed = millis() * random(0.2, 0.9);
-  seed = millis();
-  paint();
 }
