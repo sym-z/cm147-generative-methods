@@ -22,6 +22,7 @@ const LAND = [0, 255, 0, 255];
 // Globals
 let canvasContainer;
 let canvas;
+let C_WIDTH, C_HEIGHT;
 var centerHorz, centerVert;
 
 // setup() function is called once when the program starts
@@ -46,8 +47,8 @@ function drawBackground(){
   beginShape();
   vertex(0,BG_HEIGHT);
   vertex(canvas.width,BG_HEIGHT);
-  vertex(canvas.width,BG_HEIGHT+BG_MIN_THICK);
-  vertex(0,BG_HEIGHT+BG_MIN_THICK);
+  vertex(canvas.width,BG_HEIGHT+BG_THICK);
+  vertex(0,BG_HEIGHT+BG_THICK);
   endShape(CLOSE);
 }
 // Far Coast

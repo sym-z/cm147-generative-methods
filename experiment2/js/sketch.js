@@ -4,21 +4,21 @@
 
 // LAND LEVELS
 const SEA_LEVEL = 128;
-const SEA_MIN_THICK = 256;
-const SKY_MIN_THICK = 64;
+const SEA_THICK = 256;
+const SKY_THICK = 64;
 let bgHeight;
-const BG_MIN_THICK = 64;
+const BG_THICK = 64;
 let mgHeight;
-const MG_MIN_THICK = 64;
+const MG_THICK = 64;
 let fgHeight;
-const FG_MIN_THICK = 64;
+const FG_THICK = 64;
 
 // COLORS
 const WATER = [0.25, 0.66, 1, 1];
 const SKY = [0.4, 0.48, 0.6, 1];
 const LAND = [0, 255, 0, 255];
-const LAND2 = [255, 255, 0, 255];
-const LAND3 = [255, 0, 0, 255];
+const LAND2 = [255, 255, 0, 150];
+const LAND3 = [255, 0, 0, 150];
 
 // Globals
 let canvasContainer;
@@ -39,37 +39,37 @@ function setup() {
 function paint() {
   drawSky();
   drawWater();
-  drawRocks();
   drawBackground();
   drawMidground();
   drawForeground();
+  drawRocks();
 }
 // Trees
 function drawBackground(){
-  bgHeight = random(SKY_MIN_THICK,SEA_LEVEL)
+  bgHeight = random(SKY_THICK,SEA_LEVEL)
   fill(LAND);
   beginShape();
   vertex(0,bgHeight);
   vertex(canvas.width,bgHeight);
-  vertex(canvas.width,bgHeight+BG_MIN_THICK);
-  vertex(0,bgHeight+BG_MIN_THICK);
+  vertex(canvas.width,bgHeight+BG_THICK);
+  vertex(0,bgHeight+BG_THICK);
   endShape(CLOSE);
 }
 // Far Coast
 function drawMidground(){
-  mgHeight = random(bgHeight,bgHeight+BG_MIN_THICK)
+  mgHeight = random(bgHeight,bgHeight+BG_THICK)
   fill(LAND2);
   beginShape();
   vertex(0,mgHeight);
   vertex(canvas.width,mgHeight);
-  vertex(canvas.width,mgHeight+MG_MIN_THICK);
-  vertex(0,mgHeight+MG_MIN_THICK);
+  vertex(canvas.width,mgHeight+MG_THICK);
+  vertex(0,mgHeight+MG_THICK);
   endShape(CLOSE);
 
 }
 // Close coast
 function drawForeground(){
-  fgHeight = random(mgHeight+MG_MIN_THICK+SEA_MIN_THICK,canvas.height-FG_MIN_THICK)
+  fgHeight = random(mgHeight+MG_THICK+SEA_THICK,canvas.height-FG_THICK)
   fill(LAND3);
   beginShape();
   vertex(0,fgHeight);
@@ -90,7 +90,7 @@ function drawRocks() {
   let numRocks = random(ROCK_COUNT_MIN, ROCK_COUNT_MAX);
   for (let i = 0; i < numRocks; i++) {
     let randomX = random(canvas.width);
-    let randomY = random(SEA_LEVEL+ROCK_THICK_MAX, canvas.height);
+    let randomY = random(mgHeight+MG_THICK+ROCK_THICK_MAX, fgHeight);
     let randomW = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     let randomH = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     fill(ROCK_COLOR);
