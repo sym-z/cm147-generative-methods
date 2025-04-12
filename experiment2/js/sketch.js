@@ -19,9 +19,9 @@ const LAND_LOD = 5;
 // COLORS
 const WATER = [0.25, 0.66, 1, 1];
 const SKY = [0.4, 0.48, 0.6, 1];
-const LAND = [0, 255, 0, 255];
-const LAND2 = [255, 255, 0, 255];
-const LAND3 = [255, 0, 0, 255];
+const FG_COLOR = [156, 138, 117, 255];
+const MG_COLOR = [103, 102, 87, 255];
+const BG_COLOR = [70, 89, 56, 255];
 
 // Globals
 let canvasContainer;
@@ -51,13 +51,30 @@ function paint() {
   drawMidground();
   drawForeground();
   drawRocks();
+  addSunlight();
+}
+function addSunlight()
+{
+  let sunLevel = random(70,150)
+  let sunSlope = random(0.7,1.5)
+  for(let x = 0; x < canvas.width; x+=10)
+  {
+    for (let y = 0; y < canvas.height; y+=10)
+    {
+      if(y > x/sunSlope)
+      {
+        fill(255,255,255,sunLevel)
+        rect(x,y,10,10)
+      }
+    }
+  }
 }
 // Trees
 function drawBackground() {
   randomSeed(seed);
   noiseSeed(bgSeed);
   bgHeight = random(SKY_THICK, SEA_LEVEL);
-  fill(LAND);
+  fill(BG_COLOR);
   beginShape();
   // TOP SIDE
   for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
@@ -81,7 +98,7 @@ function drawBackground() {
     let yPos = y + noiseVal + BG_THICK;
     vertex(x, yPos);
   }
-  endShape(CLOSE);
+  endShape(TRIANGLE_FAN);
 }
 // Far Coast
 // First draw a line that cuts through the center of the background, then draw the underside of the midground
@@ -89,7 +106,7 @@ function drawMidground() {
   randomSeed(seed);
   noiseSeed(mgSeed);
   mgHeight = bgHeight;
-  fill(LAND2);
+  fill(MG_COLOR);
   beginShape();
   // TOP SIDE
   for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
@@ -126,7 +143,7 @@ function drawForeground() {
   noiseSeed(fgSeed);
   // fgHeight = random(mgHeight + MG_THICK + SEA_THICK, canvas.height - FG_THICK);
   fgHeight = canvas.height - FG_THICK;
-  fill(LAND3);
+  fill(FG_COLOR);
   beginShape();
 
   // TOP SIDE
