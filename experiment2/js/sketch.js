@@ -11,8 +11,11 @@ const VALUE1 = 1;
 const VALUE2 = 2;
 
 const SEA_LEVEL = 128;
+const BACKGROUND_HEIGHT = 0;
+const MIDGROUND_HEIGHT = 0;
+const FOREGROUND_HEIGHT = 0;
 const WATER = [0.25, 0.66, 1, 1];
-const SKY = [0.4, 0.48, .6, 1];
+const SKY = [0.4, 0.48, 0.6, 1];
 const LAND = [0, 255, 0, 255];
 
 // Globals
@@ -41,37 +44,45 @@ const ROCK_COUNT_MAX = 20;
 const ROCK_COLOR = [70, 60, 52, 255];
 const ROCK_THICK_MIN = 20;
 const ROCK_THICK_MAX = 45;
+let rockSeed = 265;
 function drawRocks() {
+  randomSeed(rockSeed);
   noStroke();
-  randomSeed(millis());
   let numRocks = random(ROCK_COUNT_MIN, ROCK_COUNT_MAX);
   for (let i = 0; i < numRocks; i++) {
     let randomX = random(canvas.width);
-    let randomY = random(SEA_LEVEL, canvas.height);
+    let randomY = random(SEA_LEVEL+ROCK_THICK_MAX, canvas.height);
     let randomW = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     let randomH = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     fill(ROCK_COLOR);
-    arc(randomX, randomY, randomW, randomH, PI, 0);
+    let offset = sin(millis() / 800);
+    offset = constrain(offset, -PI / 4, PI / 4);
+    arc(randomX, randomY, randomW, randomH, PI - offset, 0 + offset, OPEN);
     console.log(`drawing rock at ${randomX},${randomY}`);
   }
 }
+const FOAM_LEVEL = 180;
 function drawWater() {
   noStroke();
-  noiseSeed(millis());
   let noiseLevel = 255;
   let noiseScale = 0.055;
   let brightness = 165;
-  let tileW = 5;
-  let tileH = 5;
+  let tileW = 6;
+  let tileH = 6;
   for (let x = 0; x < canvas.width; x += tileW) {
     for (let y = SEA_LEVEL; y < canvas.height; y += tileH) {
       let nx = noiseScale * x;
       let ny = noiseScale * y;
-      let c = 255 * noise(nx, ny) + brightness;
+      let c = noiseLevel * noise(nx, ny);
       let color = [];
-      WATER.forEach((item, index) => {
-        color.push(c * item);
-      });
+      if (c < FOAM_LEVEL) {
+        c += brightness;
+        WATER.forEach((item, index) => {
+          color.push(c * item);
+        });
+      } else {
+        color = 255;
+      }
       fill(color);
       rect(x, y, x + tileW, y + tileH);
     }
@@ -80,25 +91,24 @@ function drawWater() {
 const CLOUD_BRIGHTNESS = 150;
 function drawSky() {
   noStroke();
-  noiseSeed(millis());
   let noiseLevel = 255;
   let noiseScale = 0.055;
   let brightness = 140;
-  let tileW = 2;
-  let tileH = 2;
+  let tileW = 7;
+  let tileH = 7;
   for (let x = 0; x < canvas.width; x += tileW) {
     for (let y = 0; y < canvas.height; y += tileH) {
       let nx = noiseScale * x;
       let ny = noiseScale * y;
-      let c = noiseLevel * noise(nx, ny); 
+      let c = noiseLevel * noise(nx, ny);
       let color = [];
       if (c < CLOUD_BRIGHTNESS) {
-        c+=brightness;
+        c += brightness;
         SKY.forEach((item, index) => {
           color.push(c * item);
         });
       } else {
-        color =c+brightness  ;
+        color = c + brightness;
       }
       fill(color);
       rect(x, y, x + tileW, y + tileH);
@@ -107,9 +117,12 @@ function drawSky() {
 }
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
-  //drawWater();
+  clear();
+  paint();
 }
 
 function mousePressed() {
+  noiseSeed(millis());
+  rockSeed = millis();
   paint();
 }

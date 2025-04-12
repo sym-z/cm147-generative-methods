@@ -17,3 +17,10 @@ body {
     width: 600px;
     height: 600px;
 }
+
+.image-wrapper {
+    width: 25%x;
+    padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
