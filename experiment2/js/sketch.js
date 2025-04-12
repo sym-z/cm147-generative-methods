@@ -22,6 +22,9 @@ const SKY = [0.4, 0.48, 0.6, 1];
 const FG_COLOR = [156, 138, 117, 255];
 const MG_COLOR = [103, 102, 87, 255];
 const BG_COLOR = [70, 89, 56, 255];
+const GRASS_COLOR = [112, 147, 80, 255];
+const FLOWER_COLOR = [196, 90, 180, 255];
+const STONE_COLOR = [71, 71, 71, 75];
 
 // Globals
 let canvasContainer;
@@ -41,8 +44,6 @@ function setup() {
   canvas.parent("canvas-container");
   centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
   centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
-
-  //paint();
 }
 function paint() {
   drawSky();
@@ -51,20 +52,70 @@ function paint() {
   drawMidground();
   drawForeground();
   drawRocks();
+  addFoliage();
+  drawStrata();
   addSunlight();
 }
-function addSunlight()
-{
-  let sunLevel = random(70,150)
-  let sunSlope = random(0.7,1.5)
-  for(let x = 0; x < canvas.width; x+=10)
-  {
-    for (let y = 0; y < canvas.height; y+=10)
-    {
-      if(y > x/sunSlope)
-      {
-        fill(255,255,255,sunLevel)
-        rect(x,y,10,10)
+function addFoliage() {
+  fill(0);
+  let flowerBoundaryX = canvas.width / 2;
+  let flowerBoundaryY = canvas.height - FG_THICK;
+  let grassBoundaryX = 256;
+  let grassBoundaryY = 24;
+  rect(flowerBoundaryX, flowerBoundaryY, canvas.width / 2, FG_THICK);
+  triangle(
+    flowerBoundaryX,
+    flowerBoundaryY,
+    flowerBoundaryX,
+    canvas.height,
+    flowerBoundaryX - grassBoundaryX,
+    canvas.height
+  );
+  triangle(
+    flowerBoundaryX,
+    flowerBoundaryY,
+    canvas.width,
+    flowerBoundaryY - grassBoundaryY,
+    canvas.width,
+    flowerBoundaryY
+  );
+}
+function drawStrata() {
+  fill(STONE_COLOR);
+  let stoneBorderDarkening = 0.95;
+  let stoneBorderColor = [];
+  STONE_COLOR.forEach((channel, index) => {
+    if (index < 3) {
+      stoneBorderColor.push(channel * stoneBorderDarkening);
+    } else {
+      stoneBorderColor.push(channel);
+    }
+  });
+  stroke(stoneBorderColor);
+  let stoneThickness = 32;
+  let slateSize = 4;
+  let slateSlant = random(0,12);
+  let stoneMinY = mgHeight + MG_THICK;
+  let stoneMaxY = stoneMinY + stoneThickness;
+  // rect(0,stoneMinY,canvas.width,stoneThickness)
+  beginShape(QUAD_STRIP);
+  vertex(0, stoneMinY);
+  vertex(canvas.width, stoneMinY+slateSlant);
+  for (let i = 0; i < stoneThickness; i += slateSize) {
+    vertex(0, stoneMinY + i);
+    vertex(canvas.width, stoneMinY + i + slateSlant);
+  }
+  endShape();
+  noStroke();
+}
+function addSunlight() {
+  let sunLevel = random(70, 150);
+  let sunSlope = random(0.7, 1.5);
+  for (let x = 0; x < canvas.width; x += 10) {
+    for (let y = 0; y < canvas.height; y += 10) {
+      if (y > x / sunSlope) {
+        fill(255, 255, 255, sunLevel);
+        rect(x, y, 10, 10);
       }
     }
   }
@@ -156,12 +207,12 @@ function drawForeground() {
     if (x == LAND_LOD) {
       xPos = 0;
     }
-    let yPos = y + noiseVal - x/FG_SLOPE_FACTOR;
+    let yPos = y + noiseVal - x / FG_SLOPE_FACTOR;
     vertex(xPos, yPos);
   }
   // BOTTOM SIDE
-  vertex(canvas.width + LAND_LOD,canvas.height+LAND_LOD);
-  vertex(-LAND_LOD,canvas.height+LAND_LOD);
+  vertex(canvas.width + LAND_LOD, canvas.height + LAND_LOD);
+  vertex(-LAND_LOD, canvas.height + LAND_LOD);
   // for (let x = canvas.width + LAND_LOD; x >= 0 - LAND_LOD; x -= LAND_LOD) {
   //   let y = fgHeight + FG_THICK / 2;
   //   let noiseScale = 0.01;
@@ -183,7 +234,10 @@ function drawRocks() {
   let numRocks = random(ROCK_COUNT_MIN, ROCK_COUNT_MAX);
   for (let i = 0; i < numRocks; i++) {
     let randomX = random(canvas.width);
-    let randomY = random(mgHeight + MG_THICK + ROCK_THICK_MAX * 2, fgHeight-fgHeight/FG_SLOPE_FACTOR);
+    let randomY = random(
+      mgHeight + MG_THICK + ROCK_THICK_MAX * 2,
+      fgHeight - fgHeight / FG_SLOPE_FACTOR
+    );
     let randomW = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     let randomH = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     fill(ROCK_COLOR);
@@ -257,7 +311,7 @@ function mousePressed() {
   noiseSeed(millis());
   bgSeed = millis();
   mgSeed = millis() + frameCount;
-  fgSeed = millis() * random(0.2,0.9)
+  fgSeed = millis() * random(0.2, 0.9);
   seed = millis();
   paint();
 }
