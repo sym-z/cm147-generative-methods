@@ -40,7 +40,6 @@ function setup() {
   canvasContainer = $("#canvas-container");
   canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
   canvas.parent("canvas-container");
-
 }
 let night = false;
 function paint() {
@@ -52,11 +51,9 @@ function paint() {
   drawRocks();
   addFoliage();
   drawStrata();
-  if(!night)
-  {
+  if (!night) {
     addSunlight();
-  }
-  else{
+  } else {
     nightTime();
   }
 }
@@ -110,11 +107,10 @@ function addFoliage() {
     flowerCount++;
   }
 }
-function nightTime()
-{
-  let nightShade = [0,0,0,100]
-  fill(nightShade)
-  rect(0,0,canvas.width,canvas.height)
+function nightTime() {
+  let nightShade = [0, 0, 0, 100];
+  fill(nightShade);
+  rect(0, 0, canvas.width, canvas.height);
   night = true;
 }
 function drawStrata() {
@@ -149,8 +145,8 @@ function drawStrata() {
 function addSunlight() {
   let sunLevel = random(70, 150);
   let sunSlope = random(0.2, 0.95);
-  sunSlope+=sin(millis()/3000)
-  sunSlope = constrain(sunSlope,0.2,1.1)
+  sunSlope += sin(millis() / 3000);
+  sunSlope = constrain(sunSlope, 0.2, 1.1);
   for (let x = 0; x < canvas.width; x += 10) {
     for (let y = 0; y < canvas.height; y += 10) {
       if (y > x / sunSlope) {
@@ -320,7 +316,9 @@ function drawRocks() {
     let randomW = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     let randomH = random(ROCK_THICK_MIN, ROCK_THICK_MAX);
     fill(ROCK_COLOR);
-    let offset = sin(millis() / 800);
+    let tideSpeed = 800;
+    if (night) tideSpeed *= 2;
+    let offset = sin(millis() / tideSpeed);
     offset = constrain(offset, -PI / 4, PI / 4);
     arc(randomX, randomY, randomW, randomH, PI - offset, 0 + offset, OPEN);
   }
@@ -332,6 +330,7 @@ function drawWater() {
   let noiseLevel = 255;
   let noiseScale = 0.055;
   let brightness = 165;
+  if (night) brightness /= 2;
   let tileW = 6;
   let tileH = 6;
   for (let x = 0; x < canvas.width; x += tileW) {
@@ -340,7 +339,7 @@ function drawWater() {
       let ny = noiseScale * y;
       let c = noiseLevel * noise(nx, ny);
       let color = [];
-      if (c < FOAM_LEVEL) {
+      if (c < FOAM_LEVEL || night) {
         c += brightness;
         WATER.forEach((item) => {
           color.push(c * item);
@@ -360,6 +359,7 @@ function drawSky() {
   let noiseLevel = 255;
   let noiseScale = 0.055;
   let brightness = 140;
+  if (night) brightness /= 2;
   let tileW = 7;
   let tileH = 7;
   for (let x = 0; x < canvas.width; x += tileW) {
@@ -368,7 +368,7 @@ function drawSky() {
       let ny = noiseScale * y;
       let c = noiseLevel * noise(nx, ny);
       let color = [];
-      if (c < CLOUD_BRIGHTNESS) {
+      if (c < CLOUD_BRIGHTNESS || night) {
         c += brightness;
         SKY.forEach((item) => {
           color.push(c * item);
@@ -383,15 +383,21 @@ function drawSky() {
   let starSize = 4;
   let maxStars = 50;
   let starCount = 0;
-  if(night)
-  {
-    while(starCount < maxStars)
-    {
-      let starSizeModifier = sin(millis()/1000) + random(-1,4)
-      let xPos = random(0,canvas.width)
-      let yPos = random(0,128)
-      fill(255,255,0,255);
-      rect(xPos,yPos,starSize+starSizeModifier,starSize+starSizeModifier)
+  if (night) {
+    while (starCount < maxStars) {
+      let starSizeModifier =
+        sin(millis() / 1000) +
+        random(-1, 4) +
+        map(mouseX, 0, canvas.width, -1, 2);
+      let xPos = random(0, canvas.width);
+      let yPos = random(0, 128);
+      fill(255, 255, 0, 255);
+      rect(
+        xPos,
+        yPos,
+        starSize + starSizeModifier,
+        starSize + starSizeModifier
+      );
       starCount++;
     }
   }
