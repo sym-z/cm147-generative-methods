@@ -150,6 +150,18 @@ function drawBackground() {
   noiseSeed(bgSeed);
   bgHeight = random(SKY_THICK, SEA_LEVEL);
   fill(BG_COLOR);
+  let bgBorderShift = 0.85;
+  let bgBorderColor = [];
+  BG_COLOR.forEach((channel, index) => {
+    if (index < 3) {
+      bgBorderColor.push(channel * bgBorderShift);
+    } else {
+      bgBorderColor.push(channel);
+    }
+  });
+  stroke(bgBorderColor);
+  let bgBorderWeight = 1;
+  strokeWeight(bgBorderWeight);
   beginShape();
   // TOP SIDE
   for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
@@ -174,6 +186,7 @@ function drawBackground() {
     vertex(x, yPos);
   }
   endShape();
+  noStroke();
 }
 
 // Far Coast
