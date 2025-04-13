@@ -134,6 +134,8 @@ function drawStrata() {
 function addSunlight() {
   let sunLevel = random(70, 150);
   let sunSlope = random(0.2, 0.95);
+  sunSlope+=sin(millis()/3000)
+  sunSlope = constrain(sunSlope,0.2,1.1)
   for (let x = 0; x < canvas.width; x += 10) {
     for (let y = 0; y < canvas.height; y += 10) {
       if (y > x / sunSlope) {
