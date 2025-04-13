@@ -40,8 +40,9 @@ function setup() {
   canvasContainer = $("#canvas-container");
   canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
   canvas.parent("canvas-container");
-}
 
+}
+let night = false;
 function paint() {
   drawSky();
   drawWater();
@@ -51,7 +52,13 @@ function paint() {
   drawRocks();
   addFoliage();
   drawStrata();
-  addSunlight();
+  if(!night)
+  {
+    addSunlight();
+  }
+  else{
+    nightTime();
+  }
 }
 
 function draw() {
@@ -60,6 +67,7 @@ function draw() {
 }
 
 function mousePressed() {
+  night = !night;
   noiseSeed(millis());
   bgSeed = millis();
   mgSeed = millis() + frameCount;
@@ -70,7 +78,7 @@ function mousePressed() {
 
 function addFoliage() {
   let flowerCount = 0;
-  let maxFlowers = 20;
+  let maxFlowers = 50;
   fill(GRASS_COLOR);
   let flowerBoundaryX = canvas.width / 2;
   let flowerBoundaryY = canvas.height - FG_THICK;
@@ -93,6 +101,7 @@ function addFoliage() {
     canvas.width,
     flowerBoundaryY
   );
+  // TODO: Multiple Flower colors
   fill(FLOWER_COLOR);
   while (flowerCount < maxFlowers) {
     let xPos = random(flowerBoundaryX, canvas.width);
@@ -101,7 +110,13 @@ function addFoliage() {
     flowerCount++;
   }
 }
-
+function nightTime()
+{
+  let nightShade = [0,0,0,100]
+  fill(nightShade)
+  rect(0,0,canvas.width,canvas.height)
+  night = true;
+}
 function drawStrata() {
   fill(STONE_COLOR);
   let stoneBorderDarkening = 0.95;
@@ -363,6 +378,21 @@ function drawSky() {
       }
       fill(color);
       rect(x, y, x + tileW, y + tileH);
+    }
+  }
+  let starSize = 4;
+  let maxStars = 50;
+  let starCount = 0;
+  if(night)
+  {
+    while(starCount < maxStars)
+    {
+      let starSizeModifier = sin(millis()/1000) + random(-1,4)
+      let xPos = random(0,canvas.width)
+      let yPos = random(0,128)
+      fill(255,255,0,255);
+      rect(xPos,yPos,starSize+starSizeModifier,starSize+starSizeModifier)
+      starCount++;
     }
   }
 }
