@@ -184,11 +184,22 @@ function drawMidground() {
   noiseSeed(mgSeed);
   mgHeight = bgHeight+BG_THICK/2;
   fill(MG_COLOR);
+  let mgBorderLightening = 1.05;
+  let mgBorderColor = [];
+  MG_COLOR.forEach((channel, index) => {
+    if (index < 3) {
+      mgBorderColor.push(channel * mgBorderLightening);
+    } else {
+      mgBorderColor.push(channel);
+    }
+  });
+  stroke(mgBorderColor)
+  strokeWeight(5)
   beginShape();
   // TOP SIDE
   for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
     let y = mgHeight;
-    let noiseScale = 0.08;
+    let noiseScale = 0.01;
     let nx = x * noiseScale;
     let noiseVal = MG_THICK * noise(nx);
     let xPos = x;
@@ -208,6 +219,7 @@ function drawMidground() {
     vertex(x, yPos);
   }
   endShape(CLOSE);
+  noStroke();
 }
 
 // Close coast
@@ -233,7 +245,7 @@ function drawForeground() {
   // TOP SIDE
   for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
     let y = fgHeight;
-    let noiseScale = 0.08;
+    let noiseScale = 0.031;
     let nx = x * noiseScale;
     let noiseVal = FG_THICK * noise(nx);
     let xPos = x;
