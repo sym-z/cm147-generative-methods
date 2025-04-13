@@ -388,7 +388,8 @@ function drawSky() {
       let starSizeModifier =
         sin(millis() / 1000) +
         random(-1, 4) +
-        map(mouseX, 0, canvas.width, -1, 2);
+        constrain(map(mouseX, 0, canvas.width, -1, 2),-1,2);
+        console.log(`YO ${map(mouseX,0,canvas.width,-1,2)}`)
       let xPos = random(0, canvas.width);
       let yPos = random(0, 128);
       fill(255, 255, 0, 255);
