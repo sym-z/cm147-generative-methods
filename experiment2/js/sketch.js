@@ -116,6 +116,7 @@ function drawStrata() {
     }
   });
   stroke(stoneBorderColor);
+  strokeWeight(15)
   let stoneThickness = 32;
   let slateSize = 4;
   let slateSlant = random(0,12);
@@ -215,6 +216,17 @@ function drawForeground() {
   randomSeed(seed);
   noiseSeed(fgSeed);
   fgHeight = canvas.height - FG_THICK;
+  let fgBorderDarkening = 0.9;
+  let fgBorderColor = [];
+  FG_COLOR.forEach((channel, index) => {
+    if (index < 3) {
+      fgBorderColor.push(channel * fgBorderDarkening);
+    } else {
+      fgBorderColor.push(channel);
+    }
+  });
+  stroke(fgBorderColor)
+  strokeWeight(10)
   fill(FG_COLOR);
   beginShape();
 
@@ -235,6 +247,7 @@ function drawForeground() {
   vertex(canvas.width + LAND_LOD, canvas.height + LAND_LOD);
   vertex(-LAND_LOD, canvas.height + LAND_LOD);
   endShape(CLOSE);
+  noStroke();
 }
 
 const ROCK_COUNT_MIN = 5;
