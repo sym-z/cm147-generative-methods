@@ -1,4 +1,4 @@
-// sketch.js - Living Impressions: Sea Ranch, CA 
+// sketch.js - Living Impressions: Sea Ranch, CA
 // Author: Jack Sims
 // Date: 14 April 2025
 
@@ -93,14 +93,12 @@ function addFoliage() {
     canvas.width,
     flowerBoundaryY
   );
-  fill(FLOWER_COLOR)
-  while(flowerCount < maxFlowers)
-  {
-    let xPos = random(flowerBoundaryX, canvas.width)
-    let yPos = random(flowerBoundaryY, canvas.height)
-    rect(xPos,yPos,5,8)
-    flowerCount++
-
+  fill(FLOWER_COLOR);
+  while (flowerCount < maxFlowers) {
+    let xPos = random(flowerBoundaryX, canvas.width);
+    let yPos = random(flowerBoundaryY, canvas.height);
+    rect(xPos, yPos, 5, 8);
+    flowerCount++;
   }
 }
 
@@ -116,14 +114,15 @@ function drawStrata() {
     }
   });
   stroke(stoneBorderColor);
-  strokeWeight(15)
+  let blurFactor = 15;
+  strokeWeight(blurFactor);
   let stoneThickness = 32;
   let slateSize = 4;
-  let slateSlant = random(0,12);
+  let slateSlant = random(0, 12);
   let stoneMinY = mgHeight + MG_THICK;
   beginShape(QUAD_STRIP);
   vertex(0, stoneMinY);
-  vertex(canvas.width, stoneMinY+slateSlant);
+  vertex(canvas.width, stoneMinY + slateSlant);
   for (let i = 0; i < stoneThickness; i += slateSize) {
     vertex(0, stoneMinY + i);
     vertex(canvas.width, stoneMinY + i + slateSlant);
@@ -167,7 +166,7 @@ function drawBackground() {
   }
   // BOTTOM SIDE
   for (let x = canvas.width + LAND_LOD; x >= 0 - LAND_LOD; x -= LAND_LOD) {
-    let y = bgHeight + BG_THICK ;
+    let y = bgHeight + BG_THICK;
     let noiseScale = 0.01;
     let nx = x * noiseScale;
     let noiseVal = BG_THICK * noise(nx);
@@ -182,7 +181,7 @@ function drawBackground() {
 function drawMidground() {
   randomSeed(seed);
   noiseSeed(mgSeed);
-  mgHeight = bgHeight+BG_THICK/2;
+  mgHeight = bgHeight + BG_THICK / 2;
   fill(MG_COLOR);
   let mgBorderLightening = 1.05;
   let mgBorderColor = [];
@@ -193,18 +192,23 @@ function drawMidground() {
       mgBorderColor.push(channel);
     }
   });
-  stroke(mgBorderColor)
-  strokeWeight(5)
+  stroke(mgBorderColor);
+  let mgBorderWeight = 5;
+  strokeWeight(mgBorderWeight);
   beginShape();
   // TOP SIDE
-  for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
+  for (
+    let x = LAND_LOD;
+    x < canvas.width + LAND_LOD + mgBorderWeight;
+    x += LAND_LOD
+  ) {
     let y = mgHeight;
     let noiseScale = 0.01;
     let nx = x * noiseScale;
     let noiseVal = MG_THICK * noise(nx);
     let xPos = x;
     if (x == LAND_LOD) {
-      xPos = 0;
+      xPos = 0 - mgBorderWeight;
     }
     let yPos = y + noiseVal;
     vertex(xPos, yPos);
@@ -224,6 +228,7 @@ function drawMidground() {
 
 // Close coast
 const FG_SLOPE_FACTOR = 5;
+
 function drawForeground() {
   randomSeed(seed);
   noiseSeed(fgSeed);
@@ -237,20 +242,25 @@ function drawForeground() {
       fgBorderColor.push(channel);
     }
   });
-  stroke(fgBorderColor)
-  strokeWeight(10)
+  stroke(fgBorderColor);
+  let fgBorderWeight = 8;
+  strokeWeight(fgBorderWeight);
   fill(FG_COLOR);
   beginShape();
 
   // TOP SIDE
-  for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
+  for (
+    let x = LAND_LOD;
+    x < canvas.width + LAND_LOD + fgBorderWeight;
+    x += LAND_LOD
+  ) {
     let y = fgHeight;
     let noiseScale = 0.031;
     let nx = x * noiseScale;
     let noiseVal = FG_THICK * noise(nx);
     let xPos = x;
     if (x == LAND_LOD) {
-      xPos = 0;
+      xPos = 0 - fgBorderWeight;
     }
     let yPos = y + noiseVal - x / FG_SLOPE_FACTOR;
     vertex(xPos, yPos);
