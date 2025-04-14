@@ -24,6 +24,8 @@ const MG_COLOR = [103, 102, 87, 255];
 const BG_COLOR = [70, 89, 56, 255];
 const GRASS_COLOR = [112, 147, 80, 180];
 const FLOWER_COLOR = [196, 90, 180, 150];
+const FLOWER_COLOR2 = [214, 0, 95, 150];
+const FLOWER_COLOR3 = [106, 217, 41, 150];
 const STONE_COLOR = [71, 71, 71, 45];
 
 // Globals
@@ -98,9 +100,10 @@ function addFoliage() {
     canvas.width,
     flowerBoundaryY
   );
-  // TODO: Multiple Flower colors
-  fill(FLOWER_COLOR);
+  let flowerColors = [FLOWER_COLOR,FLOWER_COLOR2,FLOWER_COLOR3]
   while (flowerCount < maxFlowers) {
+    let fColor = flowerColors[Math.floor(random(0, flowerColors.length))];
+    fill(fColor);
     let xPos = random(flowerBoundaryX, canvas.width);
     let yPos = random(flowerBoundaryY, canvas.height);
     rect(xPos, yPos, 5, 8);
