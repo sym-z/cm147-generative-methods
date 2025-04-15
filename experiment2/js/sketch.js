@@ -99,7 +99,7 @@ function addFoliage() {
   let maxFlowers = 50;
   if(lowResMode)
   {
-    maxFlowers /= 2;
+    maxFlowers = 10;
 
   }
   fill(GRASS_COLOR);
@@ -371,11 +371,11 @@ function drawWater() {
   let tileW = 6;
   let tileH = 6;
   if(lowResMode){
-    tileW = 10;
-    tileH = 10;
+    tileW = 20;
+    tileH = 20;
   }
   for (let x = 0; x < canvas.width; x += tileW) {
-    for (let y = mgHeight + MG_THICK; y < canvas.height; y += tileH) {
+    for (let y = mgHeight + MG_THICK; y < fgHeight; y += tileH) {
       let nx = noiseScale * x;
       let ny = noiseScale * y;
       let c = noiseLevel * noise(nx, ny);
@@ -405,11 +405,11 @@ function drawSky() {
   let tileH = 7;
   if(lowResMode)
   {
-    tileW = 11;
-    tileH = 11;
+    tileW = 20;
+    tileH = 20;
   }
   for (let x = 0; x < canvas.width; x += tileW) {
-    for (let y = 0; y < canvas.height; y += tileH) {
+    for (let y = 0; y < mgHeight + MG_THICK; y += tileH) {
       let nx = noiseScale * x;
       let ny = noiseScale * y;
       let c = noiseLevel * noise(nx, ny);
