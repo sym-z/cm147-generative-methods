@@ -99,7 +99,7 @@ function addFoliage() {
   let maxFlowers = 50;
   if(lowResMode)
   {
-    maxFlowers = 10;
+    maxFlowers /=2;
 
   }
   fill(GRASS_COLOR);
@@ -431,7 +431,7 @@ function drawSky() {
   let starCount = 0;
   if(lowResMode)
   {
-    maxStars = 10;
+    maxStars = 25;
   }
   if (night) {
     while (starCount < maxStars) {
