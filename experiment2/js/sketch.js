@@ -14,7 +14,7 @@ let fgHeight;
 const FG_THICK = 64;
 
 // HORIZON DRAWING
-const LAND_LOD = 5;
+let landLod = 5;
 
 // COLORS
 const WATER = [0.25, 0.66, 1, 1];
@@ -38,6 +38,8 @@ let mgSeed = 264;
 let bgSeed = 512;
 let fgSeed = 420;
 
+let lowResMode = false;
+
 function setup() {
   canvasContainer = $("#canvas-container");
   canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
@@ -45,6 +47,14 @@ function setup() {
 }
 let night = false;
 function paint() {
+  if(lowResMode)
+  {
+    landLod = 35;
+  }
+  else
+  {
+    landLod = 5;
+  }
   drawSky();
   drawWater();
   drawBackground();
@@ -75,9 +85,23 @@ function mousePressed() {
   paint();
 }
 
+function keyPressed()
+{
+  if (key == 'c')
+  {
+    lowResMode = !lowResMode;
+    console.log(`lowResMode is ${lowResMode}`)
+  }
+}
+
 function addFoliage() {
   let flowerCount = 0;
   let maxFlowers = 50;
+  if(lowResMode)
+  {
+    maxFlowers /= 2;
+
+  }
   fill(GRASS_COLOR);
   let flowerBoundaryX = canvas.width / 2;
   let flowerBoundaryY = canvas.height - FG_THICK;
@@ -132,6 +156,10 @@ function drawStrata() {
   strokeWeight(blurFactor);
   let stoneThickness = 32;
   let slateSize = 4;
+  if(lowResMode)
+  {
+    slateSize = 8;
+  }
   let slateSlant = random(0, 12);
   let stoneMinY = mgHeight + MG_THICK;
   beginShape(QUAD_STRIP);
@@ -150,11 +178,16 @@ function addSunlight() {
   let sunSlope = random(0.2, 0.95);
   sunSlope += sin(millis() / 3000);
   sunSlope = constrain(sunSlope, 0.2, 1.1);
-  for (let x = 0; x < canvas.width; x += 10) {
-    for (let y = 0; y < canvas.height; y += 10) {
+  let sunTileSize = 10;
+  if(lowResMode)
+  {
+    sunTileSize *= 2;
+  }
+  for (let x = 0; x < canvas.width; x += sunTileSize) {
+    for (let y = 0; y < canvas.height; y += sunTileSize) {
       if (y > x / sunSlope) {
         fill(255, 255, 255, sunLevel);
-        rect(x, y, 10, 10);
+        rect(x, y, sunTileSize, sunTileSize);
       }
     }
   }
@@ -180,20 +213,20 @@ function drawBackground() {
   strokeWeight(bgBorderWeight);
   beginShape();
   // TOP SIDE
-  for (let x = LAND_LOD; x < canvas.width + LAND_LOD; x += LAND_LOD) {
+  for (let x = landLod; x < canvas.width + landLod; x += landLod) {
     let y = bgHeight;
     let noiseScale = 0.08;
     let nx = x * noiseScale;
     let noiseVal = BG_THICK * noise(nx);
     let xPos = x;
-    if (x == LAND_LOD) {
+    if (x == landLod) {
       xPos = 0;
     }
     let yPos = y + noiseVal;
     vertex(xPos, yPos);
   }
   // BOTTOM SIDE
-  for (let x = canvas.width + LAND_LOD; x >= 0 - LAND_LOD; x -= LAND_LOD) {
+  for (let x = canvas.width + landLod; x >= 0 - landLod; x -= landLod) {
     let y = bgHeight + BG_THICK;
     let noiseScale = 0.01;
     let nx = x * noiseScale;
@@ -227,23 +260,23 @@ function drawMidground() {
   beginShape();
   // TOP SIDE
   for (
-    let x = LAND_LOD;
-    x < canvas.width + LAND_LOD + mgBorderWeight;
-    x += LAND_LOD
+    let x = landLod;
+    x < canvas.width + landLod + mgBorderWeight;
+    x += landLod
   ) {
     let y = mgHeight;
     let noiseScale = 0.01;
     let nx = x * noiseScale;
     let noiseVal = MG_THICK * noise(nx);
     let xPos = x;
-    if (x == LAND_LOD) {
+    if (x == landLod) {
       xPos = 0 - mgBorderWeight;
     }
     let yPos = y + noiseVal;
     vertex(xPos, yPos);
   }
   // BOTTOM SIDE
-  for (let x = canvas.width + LAND_LOD; x >= 0 - LAND_LOD; x -= LAND_LOD) {
+  for (let x = canvas.width + landLod; x >= 0 - landLod; x -= landLod) {
     let y = mgHeight + MG_THICK / 2;
     let noiseScale = 0.01;
     let nx = x * noiseScale;
@@ -279,24 +312,24 @@ function drawForeground() {
 
   // TOP SIDE
   for (
-    let x = LAND_LOD;
-    x < canvas.width + LAND_LOD + fgBorderWeight;
-    x += LAND_LOD
+    let x = landLod;
+    x < canvas.width + landLod + fgBorderWeight;
+    x += landLod
   ) {
     let y = fgHeight;
     let noiseScale = 0.031;
     let nx = x * noiseScale;
     let noiseVal = FG_THICK * noise(nx);
     let xPos = x;
-    if (x == LAND_LOD) {
+    if (x == landLod) {
       xPos = 0 - fgBorderWeight;
     }
     let yPos = y + noiseVal - x / FG_SLOPE_FACTOR;
     vertex(xPos, yPos);
   }
   // BOTTOM SIDE
-  vertex(canvas.width + LAND_LOD, canvas.height + LAND_LOD);
-  vertex(-LAND_LOD, canvas.height + LAND_LOD);
+  vertex(canvas.width + landLod, canvas.height + landLod);
+  vertex(-landLod, canvas.height + landLod);
   endShape(CLOSE);
   noStroke();
 }
@@ -310,6 +343,7 @@ function drawRocks() {
   randomSeed(seed);
   noStroke();
   let numRocks = random(ROCK_COUNT_MIN, ROCK_COUNT_MAX);
+  if(lowResMode) numRocks = 5;
   for (let i = 0; i < numRocks; i++) {
     let randomX = random(canvas.width);
     let randomY = random(
@@ -336,6 +370,10 @@ function drawWater() {
   if (night) brightness /= 2;
   let tileW = 6;
   let tileH = 6;
+  if(lowResMode){
+    tileW = 10;
+    tileH = 10;
+  }
   for (let x = 0; x < canvas.width; x += tileW) {
     for (let y = mgHeight + MG_THICK; y < canvas.height; y += tileH) {
       let nx = noiseScale * x;
@@ -365,6 +403,11 @@ function drawSky() {
   if (night) brightness /= 2;
   let tileW = 7;
   let tileH = 7;
+  if(lowResMode)
+  {
+    tileW = 11;
+    tileH = 11;
+  }
   for (let x = 0; x < canvas.width; x += tileW) {
     for (let y = 0; y < canvas.height; y += tileH) {
       let nx = noiseScale * x;
@@ -386,6 +429,10 @@ function drawSky() {
   let starSize = 4;
   let maxStars = 50;
   let starCount = 0;
+  if(lowResMode)
+  {
+    maxStars = 10;
+  }
   if (night) {
     while (starCount < maxStars) {
       let starSizeModifier =
@@ -394,7 +441,7 @@ function drawSky() {
         constrain(map(mouseX, 0, canvas.width, -1, 2),-1,2);
         console.log(`YO ${map(mouseX,0,canvas.width,-1,2)}`)
       let xPos = random(0, canvas.width);
-      let yPos = random(0, 128);
+      let yPos = random(0, bgHeight);
       fill(255, 255, 0, 255);
       rect(
         xPos,
