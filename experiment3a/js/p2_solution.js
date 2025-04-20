@@ -20,6 +20,7 @@ function generateGrid(numCols, numRows) {
   while (roomCount != 0) {
     let roomSizeX = floor(random(roomSizeMin, roomSizeMax));
     let roomSizeY = floor(random(roomSizeMin, roomSizeMax));
+    // TODO: Assign roomX, roomY to numRows - roomSizeX, ... then do if statement with drawRect room that tries ~10 times to place a room with decreasing size
     drawRectRoom(
       grid,
       floor(random(numRows - roomSizeX)),
