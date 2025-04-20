@@ -14,9 +14,9 @@ function generateGrid(numCols, numRows) {
     grid.push(row);
   }
 
-  let roomCount = floor(random(2, 4));
-  let roomSizeMax = 7;
-  let roomSizeMin = 3;
+  let roomCount = floor(random(3, 4));
+  let roomSizeMax = 10;
+  let roomSizeMin = 2;
   while (roomCount != 0) {
     let roomSizeX = floor(random(roomSizeMin, roomSizeMax));
     let roomSizeY = floor(random(roomSizeMin, roomSizeMax));
