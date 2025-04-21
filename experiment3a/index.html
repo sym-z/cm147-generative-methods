@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<!-- This title is used for tabs and bookmarks -->
 	<title>Experiment 3a - 90's Dungeon Crawler Room Generator</title>
@@ -15,21 +16,19 @@
 
 	<!-- Load jQuery library -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-        crossorigin="anonymous"></script>
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 	<!-- Load p5.js library -->
 	<script src="https://cdn.jsdelivr.net/npm/p5@1.9.2/lib/p5.js"></script>
 
 	<!-- Link to javascript files - DEFER waits until all elements are rendered -->
-    <script type="text/javascript" src="../js/site.js" DEFER></script>
-	<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"
-	integrity="sha512-b/htz6gIyFi3dwSoZ0Uv3cuv3Ony7EeKkacgrcVg8CMzu90n777qveu0PBcbZUA7TzyENGtU+qZRuFAkfqgyoQ=="
-	crossorigin="anonymous"
-  ></script>
-  <script src="./js/p2_base.js" defer></script>
-  <script src="./js/p2_solution.js" defer></script>
+	<script type="text/javascript" src="../js/site.js" DEFER></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"
+		integrity="sha512-b/htz6gIyFi3dwSoZ0Uv3cuv3Ony7EeKkacgrcVg8CMzu90n777qveu0PBcbZUA7TzyENGtU+qZRuFAkfqgyoQ=="
+		crossorigin="anonymous"></script>
+	<script src="./js/p2_base.js" defer></script>
+	<script src="./js/p2_solution.js" defer></script>
 </head>
+
 <body>
 	<!-- Style this page by changing the CSS in ../css/site.css or css/experiment.css -->
 	<main id="content">
@@ -40,19 +39,39 @@
 			<div class="minor-section">
 				<button id="reseedButton">
 					reseed
-				  </button>
-				  <span id="seedReport"></span>
-				  <hr />
+				</button>
+				<span id="seedReport"></span>
+				<hr />
 				<span id="canvasContainer" style="margin: 10px;"></span>
-				<textarea cols="20" rows="20" id="asciiBox" style="opacity: 0.5; letter-spacing: 1ex; width: 320px; margin: 10px; font-family: monospace;"></textarea>
-                <div class="fullscreen-box">
-                    <button id="fullscreen">Fullscreen</button>
-                </div>
+				<textarea cols="20" rows="20" id="asciiBox"
+					style="opacity: 0.5; letter-spacing: 1ex; width: 320px; margin: 10px; font-family: monospace;"></textarea>
+				<div class="fullscreen-box">
+					<button id="fullscreen">Fullscreen</button>
+				</div>
 			</div>
-			
+
 			<div class="minor-section">
+
 				<h2>Artist's Statement</h2>
-				<p>Description (describe your overworlds or dungeons), Code (describe the meaning of your text codes), and Life (how does your scene respond to mouse movement or time passing?)</p>
+				<h3>Description (describe your overworlds or dungeons), Code (describe the meaning of your text codes),
+					and Life (how does your scene respond to mouse movement or time passing?)</h3>
+				<p><b>Description</b>: A rectangular-room dungeon generator, meant to look like a worn down temple with
+					criss-crossing hallways and chests a' plenty.
+					<br>
+					<b>Codes</b>:
+					- W: Walls, they border hallways, doors and rooms
+					- R: Rooms, they are rectangular and house chests and have extending hallways
+					- D: Doors, they are adjacent to the exits of hallways connected to rooms
+					- H: Hallways, there will be up to 4 hallways connecting any given room.
+					<br>
+					<b>Life</b> The display of the dungeon flickers and blooms with a CRT scanline display. The
+					scanlines darken and alternate pixel row so fast that it gives the appearance of a bloomy CRT
+					display.
+				</p>
+				<p>(using tiles from [Micro Tileset - Overworld &
+					Dungeon](https://thkaspar.itch.io/micro-tileset-overworld-dungeon) by
+					[thkaspar](https://thkaspar.itch.io/))
+				</p>
 			</div>
 
 			<div class="minor-section">
@@ -67,16 +86,18 @@
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
-				<p>Each person that worked on the code should reflect on the process, the difficulties, and the successes of the experiment.</p>
+				<p>Each person that worked on the code should reflect on the process, the difficulties, and the
+					successes of the experiment.</p>
 			</div>
 
 		</section>
 		<nav id="links" class="minor-section">
 			<!-- Put link back to homepage here. -->
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-            </ul>
+			<ul>
+				<li><a href="../index.html">Home</a></li>
+			</ul>
 		</nav>
 	</main>
 </body>
+
 </html>

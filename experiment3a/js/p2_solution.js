@@ -14,22 +14,31 @@ function generateGrid(numCols, numRows) {
     grid.push(row);
   }
 
-  let roomCount = floor(random(3, 4));
+  let roomCount = floor(random(3, 5));
   let roomSizeMax = 10;
   let roomSizeMin = 2;
+  let maxAttempts = 20;
   while (roomCount != 0) {
     let roomSizeX = floor(random(roomSizeMin, roomSizeMax));
     let roomSizeY = floor(random(roomSizeMin, roomSizeMax));
-    // TODO: Assign roomX, roomY to numRows - roomSizeX, ... then do if statement with drawRect room that tries ~10 times to place a room with decreasing size
-    drawRectRoom(
-      grid,
-      floor(random(numRows - roomSizeX)),
-      floor(random(numCols - roomSizeY)),
-      roomSizeX,
-      roomSizeY,
-      "R"
-    );
-    roomCount -= 1;
+    if (
+      drawRectRoom(
+        grid,
+        floor(random(numRows - roomSizeX)),
+        floor(random(numCols - roomSizeY)),
+        roomSizeX,
+        roomSizeY,
+        "R"
+      ) == true
+    ) {
+      roomCount -= 1;
+    } else {
+      maxAttempts -= 1;
+      if (maxAttempts == 0) {
+        maxAttempts = 10;
+        break;
+      }
+    }
   }
   return grid;
 }
@@ -56,6 +65,7 @@ function drawRectRoom(grid, x, y, sizeX, sizeY, symbol) {
       for (let i = y - 1; i >= 0; i--) {
         if (
           !gridCheck(grid, i, hallWayX, symbol) &&
+          !gridCheck(grid, i, hallWayX, "H") &&
           !gridCheck(grid, i, hallWayX, "D")
         ) {
           if (i < y - 1) {
@@ -73,6 +83,7 @@ function drawRectRoom(grid, x, y, sizeX, sizeY, symbol) {
       for (let i = y + sizeY; i < rows; i++) {
         if (
           !gridCheck(grid, i, hallWayX, symbol) &&
+          !gridCheck(grid, i, hallWayX, "H") &&
           !gridCheck(grid, i, hallWayX, "D")
         ) {
           if (i > y + sizeY) {
@@ -91,6 +102,7 @@ function drawRectRoom(grid, x, y, sizeX, sizeY, symbol) {
       for (let i = x - 1; i >= 0; i--) {
         if (
           !gridCheck(grid, hallWayY, i, symbol) &&
+          !gridCheck(grid, hallWayY, i, "H") &&
           !gridCheck(grid, hallWayY, i, "D")
         ) {
           if (i < x - 1) {
@@ -107,6 +119,7 @@ function drawRectRoom(grid, x, y, sizeX, sizeY, symbol) {
       for (let i = x + sizeX; i < cols; i++) {
         if (
           !gridCheck(grid, hallWayY, i, symbol) &&
+          !gridCheck(grid, hallWayY, i, "H") &&
           !gridCheck(grid, hallWayY, i, "D")
         ) {
           if (i > x + sizeX) {
@@ -119,8 +132,9 @@ function drawRectRoom(grid, x, y, sizeX, sizeY, symbol) {
         }
       }
     }
-    // Right Middle
+    return true;
   }
+  return false;
 }
 function gridCheck(grid, i, j, target) {
   if (i >= 0 && i < rows && j >= 0 && j < cols && grid[i][j] == target) {
@@ -196,7 +210,9 @@ function drawGrid(grid) {
     for (let j = 0; j < grid[i].length; j++) {
       if (grid[i][j] == "R") {
         if (floor(random(0, 50)) < 2) {
-          placeTile(i, j, 0, 30);
+          let chestY = floor(random(28,31));
+          let chestX = floor(random(0,6));
+          placeTile(i, j, chestX, chestY);
         } else {
           placeTile(i, j, random(4) | 0, 9);
         }

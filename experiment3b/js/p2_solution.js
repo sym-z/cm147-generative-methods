@@ -132,20 +132,27 @@ function drawGrid(grid) {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[i].length; j++) {
       switch (grid[i][j]) {
-      case "F":
-        placeTile(i, j, floor(random(4)), 0);
-        placeTile(i, j, 14, 6);
-        break;
-      case "R":
-        placeTile(i, j, floor(random(1,3)) +sin(millis()/1000), 13);
-        break;
-      case "H":
-        placeTile(i, j, floor(random(4)), 0);
-        placeTile(i, j, floor(random(26, 28)), floor(random(0, 4)));
-        break;
-      default:
-        drawContext(grid, i, j, ["F", "R","H"], 0, 0);
-        break;
+        case "F":
+          placeTile(i, j, floor(random(4)), floor(random(0, 2)));
+          let treeOptions = [
+            [14, 0],
+            [20, 0],
+            [14, 6],
+            [20, 6],
+          ];
+          let treeChoice = treeOptions[floor(random(0, treeOptions.length))];
+          placeTile(i, j, treeChoice[0], treeChoice[1]);
+          break;
+        case "R":
+          placeTile(i, j, floor(random(1, 3)) + sin(millis() / 1000), 13);
+          break;
+        case "H":
+          placeTile(i, j, floor(random(4)), 0);
+          placeTile(i, j, floor(random(26, 28)), floor(random(0, 4)));
+          break;
+        default:
+          drawContext(grid, i, j, ["F", "R", "H"], 0, 0);
+          break;
       }
     }
   }
