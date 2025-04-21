@@ -210,16 +210,15 @@ function drawGrid(grid) {
     for (let j = 0; j < grid[i].length; j++) {
       if (grid[i][j] == "R") {
         if (floor(random(0, 50)) < 2) {
-          let chestY = floor(random(28,31));
-          let chestX = floor(random(0,6));
-          placeTile(i, j, chestX, chestY);
+          drawChest(i,j);
         } else {
           placeTile(i, j, random(4) | 0, 9);
         }
       } else if (grid[i][j] == "H") {
         placeTile(i, j, 21 + floor(random(0, 3)), 21);
       } else if (grid[i][j] == "D") {
-        placeTile(i, j, 5 + floor(random(0, 2)), 27);
+        let doorAnimationOffset = floor(frameCount/50 % 3)   
+        placeTile(i, j, 5 + doorAnimationOffset, 27);
       } else {
         // DRAW WALL STARTING FROM...
         if (floor(random(0, 2)) == 0) {
@@ -237,7 +236,6 @@ function drawGrid(grid) {
   }
 }
 
-//TODO: CRT FILTER
 function crt(offset) {
   let draw = true;
   noStroke();
@@ -252,4 +250,20 @@ function crt(offset) {
       draw = true;
     }
   }
+}
+
+function drawChest(i,j)
+{
+  let chestY = floor(random(28, 31));
+  let chestX = floor(random(0, 6));
+  placeTile(i, j, chestX, chestY);
+  // Draw glow
+  let glowAmount = 150 * abs(sin(millis()/1000))
+  let glowColor = [255,255,200,glowAmount];
+  let glowX = (j*16) + 8
+  let glowY = (i*16) + 8
+  let glowSize = 18;
+  fill(glowColor);
+  noStroke();
+  circle(glowX,glowY,glowSize)
 }
