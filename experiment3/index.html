@@ -78,17 +78,37 @@
 			<div class="minor-section">
 				<h2>Description</h2>
 				<p>What are you trying to acomplish with this experiment?</p>
+				<p>I wanted to make a dungeon generator that generates dungeons similar to those in 90's dungeon crawler games.
+					I wanted to add to the retro aesthetic by creating a sort-of shader that mimics the bloom and scanlines of a CRT televsion.
+					I created the rooms in the dungeon so that the rectangles would never overlap eachother and that hallways would form intersections.
+					I added some animation of light gleaming off of the chests and animated the doorways to simulate light leaking into the entrances to hallways.
+				</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Technical</h2>
 				<p>Describe in detail what you did technically and how it works?</p>
+				<p>I use a function that attempts to place rectangles of the room code on top of any wall codes that it can. It attempts to do so over a certain number of attempts until it 
+					successfully places the correct number of rooms or it runs out of attempts. Then the rooms start generating their hallway codes starting with a door code at the beginning of the hallway.
+					As the hallways are generating, if they try to generate over any code that is not a wall code, it will stop generating the hallway in order to create interesting, realistic interstections 
+					of pathways, and not just infinite hallways in all directions. There is a shader-like function that I created that controls the overall look of the dungeon. It generates scanlines and flicker
+					by alternating an offset between illuminating different alternating rows of pixels. It also routinely blooms and dims like a display that is losing power. I use randomization to place chests in rooms
+					and I overlay glowing lights on top of the chests to draw the attention of the viewer. I also animated the doorways so they would cycle through nearby door tiles in the spritesheet to give the appearance of light 
+					entering the doorway. <br><br>
+					For the autotiling, I made refactors to the way that drawContext() and the lookup array worked so that several wall tiles could be placed over the top of one another. I noticed that if there were conditions where one
+					tile needed to be able to represent multiple walls, there would be no way for it to overlay the correct tiles without refactoring the lookup array to hold multiple tile offsets to apply, which I have done. There is also noticable
+					variations in the floors and walls to give it the look of a worn down dungeon that has not seen an explorer in a long time.
+				</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
-				<p>Each person that worked on the code should reflect on the process, the difficulties, and the
-					successes of the experiment.</p>
+				<p>Each person that worked on the code should reflect on the process, the difficulties, and the successes of the experiment.</p>
+				<p>I had a fantastic time with this project because tile based worlds with autotiling was one of the main things I was excited to learn about in this class.
+					It was so fun to learn to build the code that is used by the lookup array because I love bitwise operations and bitfields and how incredible their capabilities are 
+					for storing complex information. I really wish I could've figured out instance mode to show off the other generator I made, but I am keeping it in my repository to look back on and improve
+					over time, and I can always share the link to the Glitch implementation as well.
+				</p>
 			</div>
 
 		</section>
