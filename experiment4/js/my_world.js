@@ -81,7 +81,7 @@ let cornerTuckAmount = 10;
 let xOffset = 0;
 let yOffset = 0;
 let fillColor = (200, 200);
-let toppings = [drawBun, drawPatty, drawCheese, drawLettuce, drawOnions];
+let toppings = [drawBun, drawPatty, drawCheese, drawLettuce, drawOnions, drawTomatoes];
 function p3_drawTile(i, j) {
   if (
     i > -10 &&
@@ -128,16 +128,19 @@ function p3_drawTile(i, j) {
 }
 
 function drawTopBun(i, j) {
-  if (XXH.h32("tile:" + [i, j], worldSeed) % 4 == 0) {
-    fillColor = [255];
-  } else {
-    fillColor = [153, 93, 30, 255];
-  }
   let xOffset = 0;
   let yOffset = 0;
+  if (XXH.h32("tile:" + [i, j], worldSeed) % 4 == 0) {
+    stroke(150)
+    yOffset-=2
+    fillColor = [255];
+  } else {
+    noStroke();
+    fillColor = [153, 93, 30, 255];
+  }
   //if (i % sliceSize > sliceSize /1.7)
   //fillColor = [0]
-  yOffset = sin(millis() / 1000) * i * 2;
+  yOffset += sin(millis() / 1000) * i * 2;
   return [xOffset, yOffset];
 }
 function drawBun(i, j) {
@@ -146,6 +149,7 @@ function drawBun(i, j) {
   console.log("BUN");
 
   if (XXH.h32("tile:" + [i, j], worldSeed) % 4 == 0) {
+    yOffset-=2;
     fillColor = [252, 165, 72, 255];
   } else {
     fillColor = [245, 181, 113, 255];
@@ -171,6 +175,7 @@ function drawPatty(i, j) {
   //console.log("PATTY");
   if (XXH.h32("tile:" + [i, j], worldSeed) % 4 == 0) {
     fillColor = [74, 56, 37];
+    yOffset -=2
   } else {
     fillColor = [110, 84, 57, 255];
   }
@@ -189,36 +194,59 @@ function drawCheese(i, j) {
   let xOffset = 0;
   let yOffset = 0;
   if (XXH.h32("tile:" + [i, j], worldSeed) % 4 == 0) {
+    yOffset-=2;
     fillColor = [232, 172, 46, 255];
   } else {
     fillColor = [226, 187, 35, 255];
   }
+  yOffset += sin(millis() / 1000) * (i % sliceSize);
   return [xOffset, yOffset];
 }
 function drawOnions(i, j) {
   let xOffset = 0;
   let yOffset = 0;
-  fillColor = [0, 0, 255, 0];
-  yOffset += sin(millis() / 1000) * (i % sliceSize);
+  fillColor = [0,0,0,0]
 
+  yOffset += sin(millis() / 1000) * (i % sliceSize);
   if(XXH.h32("tile:" + [i, j], worldSeed) % 20 == 0)
     {
     push();
-    onion();
+    onion(yOffset);
     pop();
   }
 
   return [xOffset, yOffset];
 }
-function onion() {
+function drawTomatoes(i, j) {
+  let xOffset = 0;
+  let yOffset = 0;
+  fillColor = [0,0,0,0]
+  yOffset += sin(millis() / 1000) * (i % sliceSize);
+
+  if(XXH.h32("tile:" + [i, j], worldSeed) % 20 == 0)
+    {
+    push();
+    tomato(yOffset);
+    pop();
+  }
+
+  return [xOffset, yOffset];
+}
+function onion(yOffset) {
   fill(150, 0, 255, 255);
-  ellipse(0, 0, 200, 50);
+  ellipse(0, 0+yOffset, 200, 50);
   fill(255, 255, 255, 255);
-  ellipse(0, 0, 175, 40);
+  ellipse(0, 0+yOffset, 175, 40);
   fill(200, 200, 200, 255);
-  ellipse(0, 0, 150, 30);
+  ellipse(0, 0+yOffset, 150, 30);
   fill(255, 255, 255, 255);
-  ellipse(0, 0, 145, 25);
+  ellipse(0, 0+yOffset, 145, 25);
+}
+function tomato(yOffset) {
+  fill(247, 70, 60, 255);
+  ellipse(0, 0+yOffset, 200, 50);
+  fill(227, 132, 127, 255);
+  ellipse(0, 0+yOffset, 175, 40);
 }
 function drawLettuce(i, j) {
   let xOffset = 0;
@@ -231,7 +259,8 @@ function drawLettuce(i, j) {
   let nj = noiseScale * j;
   let colorMod = 1.3 * noise(ni, nj);
   fillColor = [95 / colorMod, 214 / colorMod, 91 / colorMod, 255];
-  yOffset = sin(millis() / 1000) * (i % sliceSize);
+  yOffset += colorMod *30
+  yOffset += sin(millis() / 1000) * (i % sliceSize);
   return [xOffset, yOffset];
 }
 
