@@ -82,7 +82,7 @@ function setup() {
     rebuildWorld(input.value());
   });
 
-  createP("Up and Down Arrows and Scroll Wheel moves the burger.").parent("container");
+  createP("Up and Down Arrows and Scroll Wheel moves the burger. Left click takes a bite.").parent("container");
 
   rebuildWorld(input.value());
 }
@@ -98,15 +98,19 @@ function rebuildWorld(key) {
 }
 
 function mouseClicked() {
-  let world_pos = screenToWorld(
-    [0 - mouseX, mouseY],
-    [camera_offset.x, camera_offset.y]
-  );
+  // ChatGPT helped with this idea: https://chatgpt.com/share/680d6b12-f084-800b-8c05-0dc2c42f5de7
+  if(mouseX > 0 && mouseX < canvas.width/2 && mouseY > 0 && mouseY < canvas.height/2)
+  {
+    let world_pos = screenToWorld(
+      [0 - mouseX, mouseY],
+      [camera_offset.x, camera_offset.y]
+    );
 
-  if (window.p3_tileClicked) {
-    window.p3_tileClicked(world_pos[0], world_pos[1]);
+    if (window.p3_tileClicked) {
+      window.p3_tileClicked(world_pos[0], world_pos[1]);
+    }
+    return false;
   }
-  return false;
 }
 
 function draw() {
