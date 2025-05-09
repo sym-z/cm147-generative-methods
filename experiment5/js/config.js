@@ -7,7 +7,7 @@ const TEST2_EMPTY_CHANCE = 0.2;
 const TEST3_EMPTY_CHANCE = 0.30;
 
 const TEST1_WHITE_MOD = 1.5;
-const TEST2_WHITE_MOD = 1.2;
+const TEST2_WHITE_MOD = 1.12;
 const TEST3_WHITE_MOD = 1.5;
 
 const TEST1_BLACK_MOD = 0.357;
