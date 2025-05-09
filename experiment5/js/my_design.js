@@ -5,23 +5,29 @@ function getInspirations() {
     {
       name: "Rorschach Test 1",
       assetUrl:
-        "./1.png",
-      sizeMod: 1.5,
-      emptyOval: 0.25,
+        "https://cdn.glitch.global/dd997432-0cd7-4510-8c0d-aa46dc9f70a3/1.png?v=1746406086292",
+      sizeMod: TEST1_SIZE_MOD,
+      emptyOval: TEST1_EMPTY_CHANCE,
+      whiteOvalMod: TEST1_WHITE_MOD,
+      blackOvalMod: TEST1_BLACK_MOD,
     },
     {
       name: "Rorschach Test 2",
       assetUrl:
-        "./2-crop.png",
-      sizeMod: 3,
-      emptyOval: 0.2,
+        "https://cdn.glitch.global/dd997432-0cd7-4510-8c0d-aa46dc9f70a3/2-crop.png?v=1746406742049",
+      sizeMod: TEST2_SIZE_MOD,
+      emptyOval: TEST2_EMPTY_CHANCE,
+      whiteOvalMod: TEST2_WHITE_MOD,
+      blackOvalMod: TEST2_BLACK_MOD,
     },
     {
       name: "Rorschach Test 3",
       assetUrl:
-        "./3.png",
-      sizeMod: 8,
-      emptyOval: 0.5,
+        "https://cdn.glitch.global/dd997432-0cd7-4510-8c0d-aa46dc9f70a3/3.png?v=1746406091086",
+      sizeMod: TEST3_SIZE_MOD,
+      emptyOval: TEST3_EMPTY_CHANCE,
+      whiteOvalMod: TEST3_WHITE_MOD,
+      blackOvalMod: TEST3_BLACK_MOD,
     },
   ];
 }
@@ -37,12 +43,13 @@ function initDesign(inspiration) {
     fg: [],
   };
 
-  for (let i = 0; i < 250; i++) {
+  for (let i = 0; i < NUM_OVALS; i++) {
     design.fg.push({
       x: random(width / 2),
       y: random(height),
-      w: random(width / 4),
-      h: random(height / 4),
+      w: random(width / OVAL_SIZE_MOD),
+      h: random(height / OVAL_SIZE_MOD),
+      fill: 0,
       angle: 0,
     });
   }
@@ -54,7 +61,8 @@ function renderDesign(design, inspiration) {
   background(design.bg);
 
   for (let oval of design.fg) {
-    random() > inspiration.emptyOval ? fill(0) : fill(255);
+    random() > inspiration.emptyOval ? (oval.fill = 0) : (oval.fill = 255);
+    fill(oval.fill);
     // Left side oval
     push();
     translate(oval.x, oval.y);
@@ -74,8 +82,24 @@ function mutateDesign(design, inspiration, rate) {
   for (let oval of design.fg) {
     oval.x = mut(oval.x, 0, width / 2, rate);
     oval.y = mut(oval.y, 0, height, rate);
-    oval.w = mut(oval.w, 0, width / 4, rate);
-    oval.h = mut(oval.h, 0, height / 4, rate);
+    if (oval.fill == 255) {
+      oval.w = mut(
+        oval.w,
+        0,
+        (width * inspiration.whiteOvalMod) / OVAL_SIZE_MOD,
+        rate
+      );
+      oval.h = mut(
+        oval.h,
+        0,
+        (height * inspiration.whiteOvalMod) / OVAL_SIZE_MOD,
+        rate
+      );
+    } else {
+      oval.w = mut(oval.w, 0, width * inspiration.blackOvalMod / OVAL_SIZE_MOD, rate);
+      oval.h = mut(oval.h, 0, height * inspiration.blackOvalMod / OVAL_SIZE_MOD, rate);
+    }
+
     oval.angle = mut(oval.angle, 0, 360, rate);
   }
 }
